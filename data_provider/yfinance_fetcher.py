@@ -31,7 +31,7 @@ from tenacity import (
     before_sleep_log,
 )
 
-from .base import BaseFetcher, DataFetchError, STANDARD_COLUMNS, is_bse_code, _is_hk_market
+from .base import BaseFetcher, DataFetchError, STANDARD_COLUMNS, is_bse_code
 from .realtime_types import UnifiedRealtimeQuote, RealtimeSource
 from .us_index_mapping import get_us_index_yf_symbol, is_us_stock_code
 
@@ -125,10 +125,6 @@ class YfinanceFetcher(BaseFetcher):
         # 已经包含后缀的情况
         if '.SS' in code or '.SZ' in code or '.HK' in code or '.BJ' in code:
             return code
-
-        # HK stock code without "HK" in code
-        if _is_hk_market(code):
-            return f"{code}.HK"
         
         # 去除可能的 .SH 后缀
         code = code.replace('.SH', '')
