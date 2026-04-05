@@ -90,6 +90,12 @@ _etf_realtime_cache: Dict[str, Any] = {
     'ttl': 1200  # 20分钟缓存有效期
 }
 
+# HK 实时行情缓存
+_hk_realtime_cache: Dict[str, Any] = {
+    'data': None,
+    'timestamp': 0,
+    'ttl': 1800  # 30分钟缓存有效期
+}
 
 def _is_etf_code(stock_code: str) -> bool:
     """
@@ -1343,10 +1349,6 @@ class AkshareFetcher(BaseFetcher):
         em_key = "akshare_hk_em"
         sina_key = "akshare_hk_sina"
 
-        # 防封禁策略
-        self._set_random_user_agent()
-        self._enforce_rate_limit()
-
         # 确保代码格式正确（5位数字）
         raw_code = stock_code.strip().lower()
         if raw_code.endswith('.hk'):
@@ -1361,12 +1363,21 @@ class AkshareFetcher(BaseFetcher):
                 logger.info(f"[API调用] ak.stock_hk_spot_em() 获取港股实时行情...")
                 import time as _time
                 api_start = _time.time()
-
-                df = ak.stock_hk_spot_em()
-
-                api_elapsed = _time.time() - api_start
-                logger.info(f"[API返回] ak.stock_hk_spot_em 成功: 返回 {len(df)} 只港股, 耗时 {api_elapsed:.2f}s")
-                circuit_breaker.record_success(em_key)
+                if (_hk_realtime_cache['data'] is not None and 
+                    api_start - _hk_realtime_cache['timestamp'] < _hk_realtime_cache['ttl']):
+                    df = _hk_realtime_cache['data']
+                    logger.debug(f"[缓存命中] 使用缓存的HK实时行情数据")
+                else:
+                    # 防封禁策略
+                    self._set_random_user_agent()
+                    self._enforce_rate_limit()
+                    df = ak.stock_hk_spot_em()
+                    current_time = _time.time()
+                    api_elapsed = current_time - api_start
+                    logger.info(f"[API返回] ak.stock_hk_spot_em 成功: 返回 {len(df)} 只港股, 耗时 {api_elapsed:.2f}s")
+                    circuit_breaker.record_success(em_key)
+                    _hk_realtime_cache['data'] = df
+                    _hk_realtime_cache['timestamp'] = current_time
 
                 # 查找指定港股
                 row = df[df['代码'] == code]
@@ -1412,7 +1423,11 @@ class AkshareFetcher(BaseFetcher):
             logger.info(f"[API调用] ak.stock_hk_spot() 获取港股实时行情（备用）...")
             import time as _time
             api_start = _time.time()
-
+            
+            # 防封禁策略
+            self._set_random_user_agent()
+            self._enforce_rate_limit()
+        
             df_spot = ak.stock_hk_spot()
 
             api_elapsed = _time.time() - api_start
