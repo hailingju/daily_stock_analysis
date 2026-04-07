@@ -946,7 +946,7 @@ class DataFetcherManager:
         is_hk = (not is_us) and _is_hk_market(stock_code)
 
         # 美股（含美股指数）使用 Longbridge/YFinance 特殊路由；港股走下方通用数据源循环
-        if is_us:
+        if is_us or is_hk:
             prefer_lb = self._longbridge_preferred() and not is_us_index
             source_order = (
                 ["LongbridgeFetcher", "YfinanceFetcher"]
