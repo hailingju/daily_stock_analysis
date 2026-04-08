@@ -818,9 +818,9 @@ class EfinanceFetcher(BaseFetcher):
             '000300': ('沪深300', 'sh000300'),
             '000680': ('科创综指', 'sh000680'),
             '000905': ('中证500', 'sh000905'),
-            '000510': ('中证A500', 'csi000510'),
-            '000852': ('中证1000', 'sh000852'),
-            '932000': ('中证2000', 'csi932000'),
+            '000510': ('中证A500', 'sh000510'),
+            '399852': ('中证1000', 'sz399852'),
+            '932000': ('中证2000', 'sz932000'),
         }
 
         try:
@@ -845,7 +845,6 @@ class EfinanceFetcher(BaseFetcher):
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
                 if row.empty:
-                    logger.info(f"[efinance] 丢失{code}指数行情")
                     continue
                 item = row.iloc[0]
 
