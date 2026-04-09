@@ -842,7 +842,12 @@ class EfinanceFetcher(BaseFetcher):
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
                 if row.empty:
+                    logger.info(f"[efinance] 搜索指数行情 {code} ")
+                    row = _ef_call_with_timeout(ef.stock.get_realtime_quotes, [code])
+                if row is None or row.empty:
                     continue
+                #if row.empty:
+                #    continue
                 item = row.iloc[0]
 
                 price_col = '最新价' if '最新价' in df.columns else 'price'
