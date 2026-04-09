@@ -842,8 +842,24 @@ class EfinanceFetcher(BaseFetcher):
             code_col = '股票代码' if '股票代码' in df.columns else 'code'
             code_series = df[code_col].astype(str).str.zfill(6)
             code_series2 = df2[code_col].astype(str).str.zfill(6)
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2}")
-            
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[0:10]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[10:20]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[20:30]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[30:40]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[40:50]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[50:60]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[60:70]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[70:80]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[80:90]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[90:100]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[100:110]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[110:120]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[120:130]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[130:140]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[140:150]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[150:160]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[160:170]}")
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2[170:]}")          
             results: List[Dict[str, Any]] = []
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
