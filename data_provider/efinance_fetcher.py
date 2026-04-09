@@ -847,8 +847,10 @@ class EfinanceFetcher(BaseFetcher):
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
                 if row.empty:
+                    logger.info(f"[efinance] 获取不到指数行情{code}")
                     row = df2[code_series2 == code]
                 if row.empty:
+                    logger.info(f"[efinance] 再次获取不到指数行情{code}")
                     continue
                 item = row.iloc[0]
 
