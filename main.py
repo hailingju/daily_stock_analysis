@@ -526,7 +526,7 @@ def run_full_analysis(
                 dashboard = result.dashboard 
                 battle = dashboard.get('battle_plan', {})
                 strategy = battle.get('position_strategy', {})
-                suggested = strategy.get('suggested_position', 'N/A')}
+                suggested = strategy.get('suggested_position', 'N/A')
                 emoji = r.get_emoji()
                 logger.info(
                     f"{emoji} {r.name}({r.code}): {r.operation_advice} | "
