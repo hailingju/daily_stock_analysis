@@ -837,15 +837,17 @@ class EfinanceFetcher(BaseFetcher):
             if df2 is None or df2.empty:
                 logger.warning(f"[API返回] 上证指数行情为空, 耗时 {api_elapsed:.2f}s")
                 return None   
-            df = df + df2
-            
-            logger.info(f"[API返回] 指数行情成功: {len(df)} 条, 耗时 {api_elapsed:.2f}s")
+                
+            logger.info(f"[API返回] 指数行情成功: {len(df) + len(df2)} 条, 耗时 {api_elapsed:.2f}s")
             code_col = '股票代码' if '股票代码' in df.columns else 'code'
             code_series = df[code_col].astype(str).str.zfill(6)
-
+            code_series2 = df2[code_col].astype(str).str.zfill(6)
+            
             results: List[Dict[str, Any]] = []
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
+                if row.empty:
+                    row = df2[code_series2 == code]
                 if row.empty:
                     continue
                 item = row.iloc[0]
