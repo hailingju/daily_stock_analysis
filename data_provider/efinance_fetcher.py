@@ -828,45 +828,22 @@ class EfinanceFetcher(BaseFetcher):
             import time as _time
             api_start = _time.time()
             df = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['沪深系列指数'])
-            df2 = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['中证系列指数'])
             api_elapsed = _time.time() - api_start
 
             if df is None or df.empty:
                 logger.warning(f"[API返回] 沪深指数行情为空, 耗时 {api_elapsed:.2f}s")
                 return None
-            if df2 is None or df2.empty:
-                logger.warning(f"[API返回] 上证指数行情为空, 耗时 {api_elapsed:.2f}s")
-                return None   
                 
-            logger.info(f"[API返回] 指数行情成功: {len(df) + len(df2)} 条, 耗时 {api_elapsed:.2f}s")
+            logger.info(f"[API返回] 指数行情成功: {len(df)} 条, 耗时 {api_elapsed:.2f}s")
             code_col = '股票代码' if '股票代码' in df.columns else 'code'
-            code_series = df[code_col].astype(str).str.zfill(6)
-            code_series2 = df2[code_col].astype(str).str.zfill(6)
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[0:10]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[10:20]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[20:30]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[30:40]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[40:50]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[50:60]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[60:70]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[70:80]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[80:90]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[90:100]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[100:110]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[110:120]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[120:130]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[130:140]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[140:150]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[150:160]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[160:170]}")
-            logger.info(f"[efinance] 获取到上证指数名单{code_series2[170:]}")          
+            code_series = df[code_col].astype(str).str.zfill(6)    
             results: List[Dict[str, Any]] = []
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
                 if row.empty:
                     logger.info(f"[efinance] 获取不到指数行情{code}")
-                    row = df2[code_series2 == code]
-                if row.empty:
+                    row = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['{code}指数'])
+                if row in None or row.empty:
                     logger.info(f"[efinance] 再次获取不到指数行情{code}")
                     continue
                 item = row.iloc[0]
