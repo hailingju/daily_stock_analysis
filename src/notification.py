@@ -835,11 +835,15 @@ class NotificationService(
             for r in sorted_results:
                 _, signal_emoji, _ = self._get_signal_level(r)
                 display_name = self._get_display_name(r, report_language)
+                dashboard = r.dashboard 
+                battle = dashboard.get('battle_plan', {})
+                position = battle.get('position_strategy', {})
+                suggested = position.get('suggested_position', 'N/A')
                 report_lines.append(
                     f"{signal_emoji} **{display_name}({r.code})**: "
                     f"{localize_operation_advice(r.operation_advice, report_language)} | "
                     f"{labels['score_label']} {r.sentiment_score} | "
-                    f"{localize_trend_prediction(r.trend_prediction, report_language)}"
+                    f"{localize_trend_prediction(r.trend_prediction, report_language)} | {suggested}"
                 )
             report_lines.extend([
                 "",
