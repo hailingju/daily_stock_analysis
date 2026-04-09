@@ -824,7 +824,7 @@ class EfinanceFetcher(BaseFetcher):
             self._set_random_user_agent()
             self._enforce_rate_limit()
 
-            logger.info("[API调用] ef.stock.get_realtime_quotes(['沪深系列指数'，'中证系列指数']) 获取指数行情...")
+            logger.info("[API调用] ef.stock.get_realtime_quotes(['沪深系列指数']) 获取指数行情...")
             import time as _time
             api_start = _time.time()
             df = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['沪深系列指数'])
@@ -841,10 +841,6 @@ class EfinanceFetcher(BaseFetcher):
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
                 if row.empty:
-                    logger.info(f"[efinance] 获取不到指数行情{code}")
-                    row = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['{code}指数'])
-                if row in None or row.empty:
-                    logger.info(f"[efinance] 再次获取不到指数行情{code}")
                     continue
                 item = row.iloc[0]
 
