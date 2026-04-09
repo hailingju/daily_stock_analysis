@@ -832,12 +832,13 @@ class EfinanceFetcher(BaseFetcher):
             api_elapsed = _time.time() - api_start
 
             if df is None or df.empty:
-                logger.warning(f"[API返回] 指数行情为空, 耗时 {api_elapsed:.2f}s")
+                logger.warning(f"[API返回] 沪深指数行情为空, 耗时 {api_elapsed:.2f}s")
                 return None
-
-            if df2 and not df2.empty:
-                df = df +  df2   
-                
+            if df2 is None or df2.empty:
+                logger.warning(f"[API返回] 上证指数行情为空, 耗时 {api_elapsed:.2f}s")
+                return None   
+            df = df + df2
+            
             logger.info(f"[API返回] 指数行情成功: {len(df)} 条, 耗时 {api_elapsed:.2f}s")
             code_col = '股票代码' if '股票代码' in df.columns else 'code'
             code_series = df[code_col].astype(str).str.zfill(6)
