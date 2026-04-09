@@ -523,10 +523,14 @@ def run_full_analysis(
         if results:
             logger.info("\n===== 分析结果摘要 =====")
             for r in sorted(results, key=lambda x: x.sentiment_score, reverse=True):
+                dashboard = result.dashboard 
+                battle = dashboard.get('battle_plan', {})
+                strategy = battle.get('position_strategy', {})
+                suggested = strategy.get('suggested_position', 'N/A')}
                 emoji = r.get_emoji()
                 logger.info(
                     f"{emoji} {r.name}({r.code}): {r.operation_advice} | "
-                    f"评分 {r.sentiment_score} | {r.trend_prediction}"
+                    f"评分 {r.sentiment_score} | {r.trend_prediction} | {suggested}"
                 )
 
         logger.info("\n任务执行完成")
