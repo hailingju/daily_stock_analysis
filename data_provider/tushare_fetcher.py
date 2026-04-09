@@ -768,6 +768,24 @@ class TushareFetcher(BaseFetcher):
             # 批量获取所有指数数据
             for ts_code, name in indices_map.items():
                 try:
+                    quote = self.get_realtime_quote(ts_code)
+                    if quote is not NULL:
+                        results.append({
+                            'code': quote.code,
+                            'name': quote.name,
+                            'current': quote.price,
+                            'change': quote.change_amount,
+                            'change_pct': quote.change_pct,
+                            'open': quote.open_price,
+                            'high': quote.high,
+                            'low': quote.low,
+                            'prev_close': quote.pre_close,
+                            'volume': quote.volume,
+                            'amount': quote.amount,
+                            'amplitude': 0.0
+                        })
+                        continue
+                        
                     df = self._api.index_daily(ts_code=ts_code, start_date=start_date, end_date=end_date)
                     if df is not None and not df.empty:
                         row = df.iloc[0] # 最新一天
