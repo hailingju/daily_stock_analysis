@@ -824,11 +824,11 @@ class EfinanceFetcher(BaseFetcher):
             self._set_random_user_agent()
             self._enforce_rate_limit()
 
-            logger.info("[API调用] ef.stock.get_realtime_quotes(['沪深系列指数'，'上证系列指数']) 获取指数行情...")
+            logger.info("[API调用] ef.stock.get_realtime_quotes(['沪深系列指数'，'中证系列指数']) 获取指数行情...")
             import time as _time
             api_start = _time.time()
             df = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['沪深系列指数'])
-            df2 = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['上证系列指数'])
+            df2 = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['中证系列指数'])
             api_elapsed = _time.time() - api_start
 
             if df is None or df.empty:
