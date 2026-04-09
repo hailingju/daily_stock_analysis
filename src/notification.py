@@ -839,6 +839,7 @@ class NotificationService(
                 battle = dashboard.get('battle_plan', {})
                 position = battle.get('position_strategy', {})
                 suggested = position.get('suggested_position', 'N/A')
+                suggested = suggested.replace('建议仓位：','仓位')
                 report_lines.append(
                     f"{signal_emoji} **{display_name}({r.code})**: "
                     f"{localize_operation_advice(r.operation_advice, report_language)} | "
