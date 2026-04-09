@@ -1627,8 +1627,8 @@ class DataFetcherManager:
                     logger.warning(f"[TickFlowFetcher] 获取指数行情失败: {e}")
 
         for fetcher in self._fetchers:
-            #if fetcher.name == "TushareFetcher":
-            #    continue
+            if fetcher.name == "TushareFetcher":
+                continue
             try:
                 data = fetcher.get_main_indices(region=region)
                 if data:
