@@ -766,8 +766,10 @@ class TushareFetcher(BaseFetcher):
             # 批量获取所有指数数据
             for ts_code, name in indices_map.items():
                 try:
+                    
                     quote = self.get_realtime_quote(ts_code)
                     if quote is not NULL:
+                        logger.debug(f"Tushare 获取指数 {name} 实时行情成功 {quote}")
                         results.append({
                             'code': quote.code,
                             'name': quote.name,
@@ -782,6 +784,7 @@ class TushareFetcher(BaseFetcher):
                             'amount': quote.amount,
                             'amplitude': 0.0
                         })
+                        logger.debug(f"results = {results}")
                         continue
                         
                     df = self._api.index_daily(ts_code=ts_code, start_date=start_date, end_date=end_date)
