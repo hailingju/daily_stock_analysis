@@ -842,6 +842,7 @@ class EfinanceFetcher(BaseFetcher):
             code_col = '股票代码' if '股票代码' in df.columns else 'code'
             code_series = df[code_col].astype(str).str.zfill(6)
             code_series2 = df2[code_col].astype(str).str.zfill(6)
+            logger.info(f"[efinance] 获取到上证指数名单{code_series2}")
             
             results: List[Dict[str, Any]] = []
             for code, (name, full_code) in indices_map.items():
