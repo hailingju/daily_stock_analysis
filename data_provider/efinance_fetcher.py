@@ -824,17 +824,20 @@ class EfinanceFetcher(BaseFetcher):
             self._set_random_user_agent()
             self._enforce_rate_limit()
 
-            logger.info("[API调用] ef.stock.get_realtime_quotes(['沪深系列指数']) 获取指数行情...")
+            logger.info("[API调用] ef.stock.get_realtime_quotes(['沪深系列指数'，'上证系列指数']) 获取指数行情...")
             import time as _time
             api_start = _time.time()
-            df = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['上证系列指数'])
-            
+            df = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['沪深系列指数'])
+            df2 = _ef_call_with_timeout(ef.stock.get_realtime_quotes, ['上证系列指数'])
             api_elapsed = _time.time() - api_start
 
             if df is None or df.empty:
                 logger.warning(f"[API返回] 指数行情为空, 耗时 {api_elapsed:.2f}s")
                 return None
 
+            if df2 and not df2.empty:
+                df = df +  df2   
+                
             logger.info(f"[API返回] 指数行情成功: {len(df)} 条, 耗时 {api_elapsed:.2f}s")
             code_col = '股票代码' if '股票代码' in df.columns else 'code'
             code_series = df[code_col].astype(str).str.zfill(6)
@@ -843,11 +846,7 @@ class EfinanceFetcher(BaseFetcher):
             for code, (name, full_code) in indices_map.items():
                 row = df[code_series == code]
                 if row.empty:
-                    logger.info(f"[efinance] 搜索指数行情 {code} ")
-                if row is None or row.empty:
                     continue
-                #if row.empty:
-                #    continue
                 item = row.iloc[0]
 
                 price_col = '最新价' if '最新价' in df.columns else 'price'
