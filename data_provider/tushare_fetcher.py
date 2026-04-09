@@ -749,6 +749,7 @@ class TushareFetcher(BaseFetcher):
             '000680.SH': '科创综指',
             '000905.SH': '中证500',
             '000852.SH': '中证1000',
+            '932000.CSI': '中证2000',
         }
 
         try:
@@ -766,27 +767,6 @@ class TushareFetcher(BaseFetcher):
             # 批量获取所有指数数据
             for ts_code, name in indices_map.items():
                 try:
-                    
-                    quote = self.get_realtime_quote(ts_code)
-                    if quote is not NULL:
-                        logger.debug(f"Tushare 获取指数 {name} 实时行情成功 {quote}")
-                        results.append({
-                            'code': quote.code,
-                            'name': quote.name,
-                            'current': quote.price,
-                            'change': quote.change_amount,
-                            'change_pct': quote.change_pct,
-                            'open': quote.open_price,
-                            'high': quote.high,
-                            'low': quote.low,
-                            'prev_close': quote.pre_close,
-                            'volume': quote.volume,
-                            'amount': quote.amount,
-                            'amplitude': 0.0
-                        })
-                        logger.debug(f"results = {results}")
-                        continue
-                        
                     df = self._api.index_daily(ts_code=ts_code, start_date=start_date, end_date=end_date)
                     if df is not None and not df.empty:
                         row = df.iloc[0] # 最新一天
