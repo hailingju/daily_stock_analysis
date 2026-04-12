@@ -840,11 +840,16 @@ class NotificationService(
                 position = battle.get('position_strategy', {})
                 suggested = position.get('suggested_position', 'N/A')
                 suggested = suggested.replace('建议仓位：','仓位 ')
+                data_persp = dashboard.get('data_perspective', {})
+                trend_data = data_persp.get('trend_status', {})
+                trend_score = trend_data.get('trend_score', 'N/A')
                 report_lines.append(
                     f"{signal_emoji} **{display_name}({r.code})**: "
                     f"{localize_operation_advice(r.operation_advice, report_language)} | "
                     f"{labels['score_label']} {r.sentiment_score} | "
-                    f"{localize_trend_prediction(r.trend_prediction, report_language)} | {suggested}"
+                    f"{localize_trend_prediction(r.trend_prediction, report_language)} | "
+                    f"{labels['trend_label']} {trend_score}/100 | "
+                    f"{suggested}"
                 )
             report_lines.extend([
                 "",
