@@ -848,7 +848,7 @@ class NotificationService(
                     f"{localize_operation_advice(r.operation_advice, report_language)} | "
                     f"{labels['score_label']} {r.sentiment_score} | "
                     f"{localize_trend_prediction(r.trend_prediction, report_language)} | "
-                    f"{labels['trend_label']} {trend_score}/100 | "
+                    f"{labels['trend_label']} {trend_score} | "
                     f"{suggested}"
                 )
             report_lines.extend([
