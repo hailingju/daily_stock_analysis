@@ -1219,7 +1219,7 @@ class NotificationService(
                         report_lines.append("")
 
                 # 财务摘要 / 股东回报 / 关联板块（数据缺失时自动隐藏对应小节）
-                self._append_fundamental_blocks(report_lines, result)
+                # self._append_fundamental_blocks(report_lines, result)
 
                 # 如果没有 dashboard，显示传统格式
                 if not dashboard:
@@ -1682,7 +1682,7 @@ class NotificationService(
             ])
 
         # 财务摘要 / 股东回报 / 关联板块（数据缺失时自动隐藏对应小节）
-        self._append_fundamental_blocks(lines, result)
+        # self._append_fundamental_blocks(lines, result)
 
         lines.append("---")
         if self._should_show_llm_model():
