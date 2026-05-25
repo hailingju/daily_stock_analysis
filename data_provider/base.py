@@ -1168,7 +1168,7 @@ class DataFetcherManager:
         # 美股（含美股指数）使用专用路由；港股走下方通用数据源循环
         # Failover chain: Finnhub(P2) -> AlphaVantage(P3) -> Yfinance(P4) -> Longbridge(P5)
         # When Longbridge preferred: Longbridge -> Finnhub -> AlphaVantage -> Yfinance
-        if is_us:
+        if is_us or is_hk:
             prefer_lb = self._longbridge_preferred(capability="daily_data") and not is_us_index
             if is_us_index:
                 # 指数始终 YFinance 首选（Longbridge 不提供指数K线）
